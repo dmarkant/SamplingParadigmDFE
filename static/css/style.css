@@ -1,0 +1,398 @@
+@import url(http://fonts.googleapis.com/css?family=Crimson+Text:400,600italic);
+
+body {
+	background: white;
+	color: black;
+	text-align: center;
+	font-family: Verdana, Helvetica, sans-serif;
+	margin: 0 auto;
+        margin-top: 0px;
+	width: 800px;
+        height: 1000px;
+}
+
+h1 {
+    font-family: "Crimson Text";
+    font-size: 32pt;
+}
+
+h2 {
+    font-family: "Crimson Text";
+    font-size: 24pt;
+    margin-top: 5px;
+}
+
+
+input {
+        width: 200px;
+        height: 100px;
+        font-size: 14pt;
+        margin: 20px;
+}
+
+.warm {
+	color: #DDAA90;
+}
+
+.cool {
+	color: #ccccff;
+}
+
+strong {
+	font-weight: bold;
+	color: black;
+}
+
+
+/* these are all the same for now, but easy to modify individually */
+#container-ad, #container-error, #container-exp, #container-consent, #container-instructions, #container-questionnaire {
+}
+
+#container-consent, #container-exp {  /* override padding to fit long consent forms and exp display*/
+}
+
+
+/* consent.html - the consent form */
+#consent {
+  margin: 0 auto;
+  margin-top: 0;
+  width: 800px;
+  font-size: 100%;
+}
+
+.legal {
+  text-align: justify;
+  font-size: 11pt;
+  line-height: 1.1em;
+}
+
+#trial {
+  margin: 0 auto;
+  width: 800px;
+  text-align: center;
+}
+
+#query {
+  color: darkgray;
+}
+
+.question {
+  margin-bottom: 30px;
+}
+
+/* errors */
+#error img {
+  padding-right: 10px;
+  padding-top: 15px;
+}
+
+
+#session {
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+
+#session-instruction {
+  margin-top: 10px;
+}
+
+#session-groups {
+}
+
+
+
+.group-coord {
+  background: #E6E6E6;
+  text-align: center;
+  width: 90%;
+  border: 5px solid #BDBDBD;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding: 0px;
+  padding-top: 10px;
+  font-family: Verdana;
+}
+
+.group-prompt {
+  font-weight: bold;
+}
+
+.group-button {
+  width: 110px;
+  height: 42px;
+  margin: 10px;
+  padding: 4px;
+  border: 2px solid white;
+  background: #FFD855;
+  font-size: 1.5em;
+  visibility: hidden;
+}
+
+#buttons {
+  margin-top: 20px;
+}
+
+#buttons * {
+  padding: 20px;
+  margin: 5px;
+}
+
+
+
+/* Instructions */
+
+#main {
+	margin: 0 auto;
+	width: 800px;
+	font-size: 100%;
+}
+
+.continue  {
+    font-size: 2em;
+	width: 5em;
+    height: 2.5em;
+	margin: 20px 20px;
+}
+
+.instruct p {
+	text-align: justify;
+}
+
+.instruct .prompt {
+	text-align: center;
+	font-style: italic;
+	font-size: 100%;
+	margin: 0 auto;
+	margin-top: 30px;
+	width: 500px;
+}
+
+
+/* Questionnaire */
+.questionnaire {
+    text-align: left;
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+}
+
+.questiontext {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.questionnaire #buttons {
+    width: 450px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.questionnaire #buttons input {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+
+.questionnaire #warning {
+    color: red;
+    font-weight: bold;
+}
+
+.questionnaire table {
+    margin: 0 auto;
+	
+    /* Border stuff: */
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0.25em;
+    border: none;
+}
+
+.questionnaire tr {
+    display: block;
+    border-bottom: 1px dashed white;
+}
+
+.questionnaire tr:last-child { border: 0; }
+
+.questionnaire td {
+    padding-right: 0.25em;
+    vertical-align: middle;
+    border-width: 0 1px;
+    border: none;
+    margin: 20px;
+    padding-bottom: 10px;
+}
+.questionnaire td:first-child, td + td {border-left: 0; }
+.questionnaire td:last-child { padding-right: 0; border-right: 0; }
+
+.answer {
+	padding-left: 3em;
+}
+
+.questionnaire textarea {
+    width: 320px;
+    height: 130px;
+}
+.questionnaire form {
+}
+.questionnaire ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+
+/* Debriefing form */
+
+#debriefing {
+	width: 640px;
+        margin: 0 auto;
+}
+
+#debriefingtext {
+	margin: 0 auto;
+	padding: 10px 20px;
+	font-size: 90%;
+	text-align: justify;
+}
+#affirmationbox {
+	position: relative;
+	margin:  0 auto;
+	border: 1px dotted white; 
+	padding: 10px 20px;
+	vertical-align: middle;
+}
+#affirmationbox p {
+	text-align: left;
+	font-style: italic;
+}
+#affirmationbox  table {
+	border-spacing: 20px;
+}
+#affirmationbox  td {
+	vertical-align: middle;
+	font-size: 100%;
+	color: black;
+	height: 50px;
+	cursor: pointer;
+}
+#affirmative {
+	background: white;
+	overflow: hidden;
+	font-weight: bold;
+	width: 10em;
+}
+#negative {
+	background: white;
+	font-size: 100%;
+	width: 25em;
+}
+
+
+
+
+
+.samplefeedback {
+    font-family: Georgia;
+    font-size: 48px;
+    color: black;
+}
+
+.optionlabel {
+    font-family: Arial;
+    font-size: 60px;
+    font-weight: bold;
+}
+
+#belowStage #instruction {
+    margin: 0 auto;
+    width: 500px;
+}
+
+.splash-text {
+    font-family: "Crimson Text";
+    font-size: 42pt;
+    font-weight: bold;
+}
+
+.splash-condition-text {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.svg-container {
+    margin: 0 auto;
+}
+
+#container-instructions .instruction-body {
+    text-align: left;
+    font-family: "Georgia";
+    font-size: 16pt;
+    margin-top: 20px;
+    line-height: 1.3em;
+    
+}
+
+.expirationlabel {
+    color: red;
+    font-family: "Arial";
+    font-weight: bold;
+    font-size: 22pt;
+}
+
+#turn-number {
+    font-weight: bold;
+    color: gray;
+    border: 1px solid gray;
+    width: 100px;
+    padding: 10px;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+#feedback-table {
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 350px;
+    font-size: 14pt;
+}
+
+#feedback-table .row {
+    padding: 5px;
+}
+
+#feedback-table .left {
+    float: left;
+    width: 200px;
+    padding-right: 20px;
+    text-align: right;
+}
+
+#feedback-table .right {
+    padding-right: 20px;
+    text-align: right;
+}
+
+#simulation {
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 5px;
+    color: red;
+    border: 2px solid red;
+    display: none;
+    width: 200px;
+}
+
+
+.progress-bar {
+    background-color: #BDBDBD;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    transition: none;
+}
