@@ -25,7 +25,7 @@ psiTurk.preloadImages(['static/images/pot.png',
 
 // loading/sampling option sets
 var OPT_CONDITION = condition;
-var OPT_ENVIRONMENT = 'discrete-normal'; // for randomly generating options
+//var OPT_ENVIRONMENT = 'discrete-normal'; // for randomly generating options
 var OPTSETS_PATH = 'static/exp1_option_sets.csv'; // predefined option sets
 var OPTSETS = load_option_sets(OPTSETS_PATH);
 seed = new Date().getTime()

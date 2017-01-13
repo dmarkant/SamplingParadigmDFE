@@ -179,7 +179,6 @@ var Option = function(stage, id, n_options) {
 	// state variables
 	self.chosen = false;
 	self.available = true;
-	self.n_opp_samples = 0;
 
 	// drawing of options
 	self.disp = self.stage.append('g')
@@ -298,7 +297,6 @@ var Option = function(stage, id, n_options) {
 	self.clear_sample = function() {
 		if (self.coin != undefined) self.coin.remove();
 		if (self.opp_samples != undefined) self.opp_samples.remove();
-		self.n_opp_samples = 0;
 	};
 
 	self.listen = function(callback) {
