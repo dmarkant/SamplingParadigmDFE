@@ -219,14 +219,12 @@ var Option = function(stage, id, n_options) {
 			};
 		};
 
-
 		return self;
 	};
 
 	self.highlight = function() {
 
         self.chosen = true;
-
 		self.obj.attr('opacity', OPTION_FADE_OPACITY);
 		self.label.attr('opacity', OPTION_FADE_OPACITY);
 
@@ -296,7 +294,6 @@ var Option = function(stage, id, n_options) {
 
 	self.clear_sample = function() {
 		if (self.coin != undefined) self.coin.remove();
-		if (self.opp_samples != undefined) self.opp_samples.remove();
 	};
 
 	self.listen = function(callback) {
