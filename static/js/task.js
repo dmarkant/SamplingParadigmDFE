@@ -20,8 +20,6 @@ var exp,
 var psiTurk = new PsiTurk(uniqueId, adServerLoc, mode);
 var LOGGING = mode != "debug";
 
-LOGGING = true;
-
 psiTurk.preloadPages(['instruct.html',
 					  'stage.html',
 					  'feedback.html']);
