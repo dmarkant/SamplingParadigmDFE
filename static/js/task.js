@@ -1,18 +1,26 @@
 var exp,
+	INSTRUCTIONS = true, // if false, skip ahead to main experiment
+	OPTSETS_PATH = 'static/option_sets_4.csv', // predefined options
+	OPTSETS, // JSON container for options, to be loaded below
+	OPTSETS_SAMPLED, // option sets in order they will be presented
 	NROUNDS = 8,
-	N_OPTIONS = 2,
+	N_OPTIONS = 2, // only works for 2!
+	N_OUTCOMES_PER_OPTION = 4,
+	OPT_CONDITION = condition,
 	OPTIONS = ['A', 'B'],
 	OPTION_FADE_OPACITY = 0.3,
 	INIT_BONUS = 0,
 	BASE_PAYMENT = .5,
 	chosen_values = [],
-	final_bonus;
-
+	final_bonus,
+	seed = new Date().getTime();
 
 
 // Initalize psiturk object
 var psiTurk = new PsiTurk(uniqueId, adServerLoc, mode);
 var LOGGING = mode != "debug";
+
+LOGGING = true;
 
 psiTurk.preloadPages(['instruct.html',
 					  'stage.html',
@@ -23,19 +31,25 @@ psiTurk.preloadImages(['static/images/pot.png',
 					   'static/images/person_self.png']);
 
 
-// loading/sampling option sets
-var OPT_CONDITION = condition;
-var OPT_ENVIRONMENT = 'discrete-normal'; // for randomly generating options
-var OPTSETS_PATH = 'static/exp1_option_sets.csv'; // predefined option sets
-var OPTSETS = load_option_sets(OPTSETS_PATH);
-seed = new Date().getTime()
-var OPTSETS_SAMPLED = sample_uniform_with_seed(NROUNDS, OPTSETS, seed);
+// load and parse option sets from CSV file
+Papa.parse(
+	OPTSETS_PATH,
+	{"download": true,
+	 "header": true,
+	 "complete": function(parsed) {
+		OPTSETS = parsed['data'];
+		OPTSETS_SAMPLED = sample_uniform_with_seed(NROUNDS, OPTSETS, seed);
+	 },
+     "error": function() {
+		output('failed to load option sets!');
+    }},
+);
 
 
 // Generic function for saving data
 function output(arr) {
     psiTurk.recordTrialData(arr);
-    if (LOGGING) console.log(arr.join(" "));
+    if (LOGGING) console.log(arr.flatten().join(" "));
 };
 
 
@@ -100,8 +114,9 @@ var SamplingGame = function(round, callback, practice) {
 	self.trial = -1;
 	self.n_options = N_OPTIONS;
 	self.gamble = generate_gamble_from_optset(self.round);
-	output(['game', self.round, 'option', 'A', self.gamble.options.A.H, self.gamble.options.A.L, self.gamble.options.A.p])
-	output(['game', self.round, 'option', 'B', self.gamble.options.B.H, self.gamble.options.B.L, self.gamble.options.B.p])
+
+	output(['game', self.round, 'option', 'A', self.gamble.options.A.X, self.gamble.options.A.P])
+	output(['game', self.round, 'option', 'B', self.gamble.options.B.X, self.gamble.options.B.P])
 
 	self.reset_stage = function(callback) {
 		psiTurk.showPage('stage.html');
@@ -161,9 +176,9 @@ var SamplingGame = function(round, callback, practice) {
 
 
 	self.generate_sample = function(chosen_id) {
-		var msg_id = 'sample_decision_'+self.round+'.'+self.trial;
 		$.each(self.options, function(i, opt) { opt.stop_listening(); });
 
+		// generate random outcome
 		result = self.gamble.options[chosen_id].random();
 		output(['game', self.round, self.trial, 'sample', chosen_id, result]);
 
@@ -232,7 +247,7 @@ var Feedback = function() {
 	// calculate final bonus
 	final_bonus = INIT_BONUS;
 	for (var i=0; i<NROUNDS; i++) {
-		final_bonus += chosen_values[i]/1000;
+		final_bonus += chosen_values[i]/100;
 	};
 	output(['instructions', 'feedback', 'final_bonus', final_bonus]);
 
@@ -288,6 +303,7 @@ var Exit = function() {
 
 var SamplingExperiment = function() {
 	var self = this;
+	self.instructions_complete = false;
 	self.round = -1;
 	chosen_values = [];
 
@@ -303,8 +319,13 @@ var SamplingExperiment = function() {
 	};
 
 	self.begin = function(group) {
-		psiTurk.finishInstructions();
-		self.next();
+		if (INSTRUCTIONS && self.instructions_complete===false) {
+			self.instructions();
+			self.instructions_complete = true;
+		} else {
+			psiTurk.finishInstructions();
+			self.next();
+		};
 	};
 
 	self.finish = function() {
