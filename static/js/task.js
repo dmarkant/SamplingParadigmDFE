@@ -40,7 +40,7 @@ Papa.parse(
 	 },
      "error": function() {
 		output('failed to load option sets!');
-    }},
+    }}
 );
 
 
