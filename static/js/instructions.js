@@ -37,9 +37,11 @@ var Instructions1 = function() {
 	var g = generate_gamble(1)['options']['A'];
 	self.urn = new Option(self.stage, 'A', 1).draw();
 
-	self.urn.listen(function() {
+	self.urn.listen(
+        function() {
             self.urn.draw_sample(g.random(), undefined, 1000, true);
-        });
+        }
+    );
 
 	self.add_text('Each urn that you see is filled with 100 coins of ' +
 		    'differing values. You can learn about the coins that are inside an urn by ' +

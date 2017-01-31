@@ -35,7 +35,7 @@ function assert(exp, message) {
 function boolpercent(arr) {
 	var count = 0;
 	for (var i=0; i<arr.length; i++) {
-		if (arr[i]) { count++; } 
+		if (arr[i]) { count++; }
 	}
 	return 100* count / arr.length;
 }
@@ -56,7 +56,6 @@ Array.prototype.flatten = function flatten(){
    }
    return flat;
 };
-
 
 
 Array.prototype.writeIndices = function( n ) {
@@ -97,25 +96,25 @@ function descending (a,b) {
     return b-a;
 };
 
+function array_sum(a) {
+    return a.reduce(function(a, b) { return a + b; }, 0);
+}
 
-function output(arr) {
-    console.log(arr);
-};
 
 /*
  *  normRand: returns normally distributed random numbers
  */
 function normRand() {
     var x1, x2, rad;
- 
+
     do {
         x1 = 2 * Math.random() - 1;
         x2 = 2 * Math.random() - 1;
         rad = x1 * x1 + x2 * x2;
     } while(rad >= 1 || rad == 0);
- 
+
     var c = Math.sqrt(-2 * Math.log(rad) / rad);
- 
+
     return x1 * c;
 };
 
@@ -124,13 +123,13 @@ function normRand() {
 // by Sean McCullough (banksean@gmail.com)
 // 25.December 2007
 
-/** 
+/**
  * Javascript implementation of the Box-Muller transform.
  * http://en.wikipedia.org/wiki/Box-Muller_transform
  * The zigurat algorithm is more efficient, but this is
- * easier to implement. This particular implementation is a 
+ * easier to implement. This particular implementation is a
  * version of http://www.dreamincode.net/code/snippet1446.htm
- * @constructor 
+ * @constructor
  * @param {Number} sigma The standard-deviation of the distribution
  * @param {Number} mu The center of the distribution
  */
@@ -172,8 +171,8 @@ function generateNormallyDistributedRandomVar(min, max) {
 		var angle = 2 * Math.PI * Math.random();
 		res = dist*Math.sin(angle) * sigma + mu;
 	}
-	
-	return res;		
+
+	return res;
 }
 
 // convenience extension to Array so you can sample indexes on this distribution
@@ -185,3 +184,21 @@ Array.prototype.sampleIndex = function() {
 	}
 	return this.samplingDistribution.sampleInt();
 }
+
+
+function cumsum(arr) {
+    for (var csum = [arr[0]], i = 0, l = arr.length-1; i<l; i++) {
+        csum[i+1] = csum[i] + arr[i+1];
+    }
+    return csum;
+}
+
+
+function sample_uniform_with_seed(n, set, seed) {
+    // choose a random starting point between (0, set.length-n),
+    // using the provided value as a seed
+    var ran = new Random(seed);
+    var i = Math.floor(ran.uniform(0, set.length - n));
+    return set.slice(i, i + n);
+};
+

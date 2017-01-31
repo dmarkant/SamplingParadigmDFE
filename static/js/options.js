@@ -3,141 +3,85 @@
  *
  */
 
-function load_option_sets(path) {
-
-    output('loading option sets from: ' + path);
-    var results = [];
-	$.ajax({url: path,
-			success: function(data) {
-				$.each(data.split('\n'), function() {
-					var optset = this.split(',');
-					if (optset[0]!="" && optset[2]==OPT_CONDITION) {
-						results.push({'id': Number(optset[1]),
-									  'env': Number(optset[2]),
-									  'A_low': Number(optset[3]),
-									  'A_high': Number(optset[4]),
-									  'A_p': Number(optset[5]),
-									  'A_ev': Number(optset[6]),
-									  'B_low': Number(optset[7]),
-									  'B_high': Number(optset[8]),
-									  'B_p': Number(optset[9]),
-									  'B_ev': Number(optset[10])});
-					};
-				});
-			},
-            error: function() {
-                output('failed to load option sets!');
-            },
-			async: false
-	});
-    return results;
+function discrete_expected_value(X, P) {
+    // calculate an option's EV given array of
+    // outcomes (X) and respective probabilities (P)
+    var ind = range(X.length);
+    return array_sum(_.map(ind, function(i) { return P[i]*X[i]; }));
 };
 
 
-var discrete_expected_value = function(option) {
-	return option['H']*option['p'] + option['L']*(1-option['p']);
+function sample_from_discrete(X, P) {
+    // generate an outcome from X given discrete
+    // probability distribution (P)
+    var r = Math.random();
+    var cs = cumsum(P);
+    var i = _.map(cs, function(p) { return 1*(p > r); }).indexOf(1);
+    return X[i];
 };
 
 
-function sample_from_discrete(option) {
-
-	if (Math.random() < option.p) {
-		return option.H;
-	} else {
-		return option.L;
-	};
-};
-
-
-function sample_uniform_with_seed(n, set, seed) {
-    // choose a random starting point between (0, set.length-n),
-    // using the provided value as a seed
-    var ran = new Random(seed);
-    var i = Math.floor(ran.uniform(0, set.length - n));
-    return set.slice(i, i + n);
-};
-
-
-
-var generate_gamble = function(N) {
-	var options = {};
-	$.each(OPTIONS, function(i, id) {
-		options[id] = new Urn(id);
-	});
-	return {'options': options};
-};
-
-
-var generate_gamble_from_optset = function(round) {
+function generate_gamble_from_optset(round) {
 	var opt = OPTSETS_SAMPLED[round];
-	var options = {'A': new UrnFromPar('A',
-									   opt['A_low'],
-									   opt['A_high'],
-									   opt['A_p'],
-									   opt['A_ev']),
-				   'B': new UrnFromPar('B',
-									   opt['B_low'],
-									   opt['B_high'],
-									   opt['B_p'],
-									   opt['B_ev'])};
+	var xind = range(N_OUTCOMES_PER_OPTION);
+    var options = {};
+    $.each(OPTIONS, function(i, label) {
+        X = _.map(xind, function(i) { return Number(opt[label+'_x'+i]); });
+        P = _.map(xind, function(i) { return Number(opt[label+'_p'+i]); });
+        ev = Number(opt[label+'_ev']);
+        options[label] = new UrnFromPar(label, X, P, ev);
+    });
 	return {'options': options};
 };
 
 
-var UrnFromPar = function(id, low, high, p, ev) {
-    // Create an option from supplied parameters
-    //
-    // low: lower outcome
-    // high: higher outcome
-    // p: probability of the high outcome
+function generate_gamble(N) {
+	// randomly generate an option for use in
+    // instructional phase
+    var options = {};
+	$.each(range(N), function(i) {
+        var label = OPTIONS[i];
+		options[label] = new Urn(label);
+	});
+	return {'options': options};
+};
+
+
+var UrnFromPar = function(id, X, P, ev) {
+    // X: array of outcomes
+    // P: array of probabilities
     // ev: expected value
 	var self = this;
-	self.par = {'H': high, 'L': low, 'p': p};
-	self.expected_value = ev;
+	self.id = id;
+    self.X = X;
+    self.P = P;
+    self.expected_value = ev;
 	self.random = function() {
-		return sample_from_discrete(self.par);
+		return sample_from_discrete(X, P);
 	};
 	return self;
 };
 
 
-
-ranran = new Random(124); // change seed
 var Urn = function(id) {
 	var self = this;
 	self.id = id;
 
-	if (OPT_ENVIRONMENT == 'discrete-normal') {
-		var nd1 = NormalDistribution(10, 30);
-		var o1 = nd1.sampleInt();
-		var nd2 = NormalDistribution(40, 90);
-		var o2 = nd2.sampleInt();
-		var p = jStat.beta.sample(4, 4);
-		output(['[o1, o2, p]:', [o1, o2, p]]);
+    // note: not sure why I did this method.. just meant to
+    // create a new option from scratch rather than use
+    // one of the option sets loaded from the CSV file.
+    var nd1 = NormalDistribution(10, 30);
+    var o1 = nd1.sampleInt();
+    var nd2 = NormalDistribution(40, 90);
+    var o2 = nd2.sampleInt();
+    var p = jStat.beta.sample(4, 4);
 
-		self.par = {'H': o1, 'L': o2, 'p': p};
-		self.random = function() {
-			return sample_from_discrete(self.par);
-		};
-		self.expected_value = discrete_expected_value(self.par);
-
-	};
-
-	if (OPT_ENVIRONMENT == 'discrete-skewed') {
-		var nd1 = NormalDistribution(10, 30);
-		var o1 = nd1.sampleInt();
-		var nd2 = NormalDistribution(40, 90);
-		var o2 = nd2.sampleInt();
-		var p = jStat.beta.sample(7, 1);
-		output(['[o1, o2, p]:', [o1, o2, p]]);
-
-		self.par = {'H': o1, 'L': o2, 'p': p};
-		self.random = function() {
-			return sample_from_discrete(self.par);
-		};
-		self.expected_value = discrete_expected_value(self.par);
-		//
-	};
+    self.X = [o1, o2];
+    self.P = [p, 1-p];
+    self.expected_value = discrete_expected_value(self.X, self.P);
+    self.random = function() {
+        return sample_from_discrete(self.X, self.P);
+    };
 
 };
 
@@ -219,7 +163,7 @@ var Option = function(stage, id, n_options) {
 			};
 		};
 
-		return self;
+        return self;
 	};
 
 	self.highlight = function() {
